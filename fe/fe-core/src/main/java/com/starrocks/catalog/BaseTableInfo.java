@@ -155,7 +155,14 @@ public class BaseTableInfo {
             }
             if (table.getTableIdentifier().equals(tableIdentifier)) {
                 return table;
+            } else {
+                LOG.warn("table {}.{}.{} is not equal to {}.{}.{}," +
+                                "table.getTableIdentifier():{},tableIdentifier:{}",
+                        catalogName, dbName, tableName,
+                        catalogName, dbName, tableIdentifier,
+                        table.getTableIdentifier(), tableIdentifier);
             }
+
             return null;
         }
     }
