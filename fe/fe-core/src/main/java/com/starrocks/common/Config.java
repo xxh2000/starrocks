@@ -1026,6 +1026,22 @@ public class Config extends ConfigBase {
     public static boolean enable_sql_blacklist = false;
 
     /**
+     * If set to true, INSERT statements will be intercepted and blocked,
+     * except for databases in the whitelist or when session variable allow_insert_bypass is true.
+     * System operations (e.g., materialized view refresh) are always allowed.
+     */
+    @ConfField(mutable = true)
+    public static boolean enable_insert_intercept = false;
+
+    /**
+     * Comma-separated list of database names that are allowed to execute INSERT statements
+     * when enable_insert_intercept is true.
+     * Example: "db1,db2,test_db"
+     */
+    @ConfField(mutable = true)
+    public static String insert_intercept_whitelist_dbs = "";
+
+    /**
      * If set to true, dynamic partition feature will open
      */
     @ConfField(mutable = true)

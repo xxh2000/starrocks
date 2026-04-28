@@ -86,6 +86,10 @@ public enum ErrorCode {
     ERR_SQL_IN_BLACKLIST_ERROR(1249, new byte[] {'4', '2', '0', '0', '0'},
             "Access denied; This sql is in blacklist, please contact your admin"),
 
+    ERR_INSERT_INTERCEPTED(1250, new byte[] {'4', '2', '0', '0', '0'},
+            "INSERT operation is blocked for database '%s' table '%s'. " +
+                    "Use 'SET allow_insert_bypass = true' or contact admin to add database to whitelist."),
+
     ERR_NOT_SUPPORTED_AUTH_MODE(1251, new byte[] {'0', '8', '0', '0', '4'},
             "Client does not support authentication protocol requested by server; consider upgrading MySQL client"),
     ERR_UNKNOWN_STORAGE_ENGINE(1286, new byte[] {'4', '2', '0', '0', '0'}, "Unknown storage engine '%s'"),

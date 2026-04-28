@@ -33,6 +33,9 @@ import static com.starrocks.sql.common.UnsupportedException.unsupportedException
 
 public class InsertAnalyzer {
     public static void analyze(InsertStmt insertStmt, ConnectContext session) {
+        // INSERT intercept check - block user INSERT based on configuration
+        InsertInterceptor.check(insertStmt, session);
+
         QueryRelation query = insertStmt.getQueryStatement().getQueryRelation();
         new QueryAnalyzer(session).analyze(insertStmt.getQueryStatement());
 

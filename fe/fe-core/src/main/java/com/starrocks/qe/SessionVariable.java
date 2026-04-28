@@ -136,6 +136,7 @@ public class SessionVariable implements Serializable, Writable, Cloneable {
     public static final String PARALLEL_FRAGMENT_EXEC_INSTANCE_NUM = "parallel_fragment_exec_instance_num";
     public static final String MAX_PARALLEL_SCAN_INSTANCE_NUM = "max_parallel_scan_instance_num";
     public static final String ENABLE_INSERT_STRICT = "enable_insert_strict";
+    public static final String ALLOW_INSERT_BYPASS = "allow_insert_bypass";
     public static final String ENABLE_SPILLING = "enable_spilling";
     // if set to true, some of stmt will be forwarded to leader FE to get result
     public static final String FORWARD_TO_LEADER = "forward_to_leader";
@@ -706,6 +707,13 @@ public class SessionVariable implements Serializable, Writable, Cloneable {
 
     @VariableMgr.VarAttr(name = ENABLE_INSERT_STRICT)
     private boolean enableInsertStrict = true;
+
+    /**
+     * When set to true, allows INSERT statements to bypass the insert intercept check.
+     * This is useful for ETL jobs or data sync tasks that need to insert data temporarily.
+     */
+    @VariableMgr.VarAttr(name = ALLOW_INSERT_BYPASS)
+    private boolean allowInsertBypass = false;
 
     @VariableMgr.VarAttr(name = FORWARD_TO_LEADER, alias = FORWARD_TO_MASTER)
     private boolean forwardToLeader = false;
@@ -1372,6 +1380,14 @@ public class SessionVariable implements Serializable, Writable, Cloneable {
 
     public void setEnableInsertStrict(boolean enableInsertStrict) {
         this.enableInsertStrict = enableInsertStrict;
+    }
+
+    public boolean isAllowInsertBypass() {
+        return allowInsertBypass;
+    }
+
+    public void setAllowInsertBypass(boolean allowInsertBypass) {
+        this.allowInsertBypass = allowInsertBypass;
     }
 
     public boolean getForwardToLeader() {
