@@ -19,7 +19,6 @@ import com.starrocks.common.ErrorCode;
 import com.starrocks.common.ErrorReport;
 import com.starrocks.qe.ConnectContext;
 import com.starrocks.sql.ast.InsertStmt;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,9 +36,10 @@ import java.util.Set;
  * 1. System operation (isSystem=true) → Allow
  * 2. Feature disabled (enable_insert_intercept=false) → Allow
  * 3. Root user → Allow
- * 4. Session bypass (allow_insert_bypass=true) → Allow
- * 5. Database in whitelist → Allow
- * 6. Otherwise → Block
+ * 4. User in whitelist → Allow
+ * 5. Session bypass (allow_insert_bypass=true) → Allow
+ * 6. Database in whitelist → Allow
+ * 7. Otherwise → Block
  */
 public class InsertInterceptor {
     private static final Logger LOG = LogManager.getLogger(InsertInterceptor.class);
@@ -65,26 +65,33 @@ public class InsertInterceptor {
 
         // 3. Root user bypass
         if (isRootUser(context)) {
-            LOG.debug("INSERT interceptor bypassed: root user");
+            LOG.info("INSERT interceptor bypassed: root user");
             return;
         }
 
-        // 4. Session variable bypass
+        // 4. User whitelist bypass
+        String currentUser = context != null ? context.getQualifiedUser() : null;
+        if (isUserInWhitelist(currentUser)) {
+            LOG.info("INSERT interceptor bypassed: user '{}' in whitelist", currentUser);
+            return;
+        }
+
+        // 5. Session variable bypass
         if (context != null && context.getSessionVariable().isAllowInsertBypass()) {
             LOG.info("INSERT interceptor bypassed: session variable allow_insert_bypass=true");
             return;
         }
 
-        // 5. Get target database name
+        // 6. Get target database name
         String dbName = getTargetDatabase(insertStmt, context);
 
-        // 6. Check whitelist
+        // 7. Check database whitelist
         if (isInWhitelist(dbName)) {
-            LOG.debug("INSERT interceptor bypassed: database '{}' in whitelist", dbName);
+            LOG.info("INSERT interceptor bypassed: database '{}' in whitelist", dbName);
             return;
         }
 
-        // 7. Block and report error
+        // 8. Block and report error
         String tableName = insertStmt.getTableName() != null ? insertStmt.getTableName().getTbl() : "unknown";
         LOG.warn("INSERT intercepted: database='{}', table='{}'", dbName, tableName);
 
@@ -122,6 +129,27 @@ public class InsertInterceptor {
         }
         String user = context.getQualifiedUser();
         return "root".equalsIgnoreCase(user);
+    }
+
+    /**
+     * Check if the user is in the whitelist.
+     */
+    private static boolean isUserInWhitelist(String userName) {
+        if (StringUtils.isEmpty(userName)) {
+            return false;
+        }
+
+        String whitelistConfig = Config.insert_intercept_whitelist_users;
+        if (StringUtils.isEmpty(whitelistConfig)) {
+            return false;
+        }
+
+        // Parse whitelist configuration
+        Set<String> whitelist = parseWhitelist(whitelistConfig);
+
+        // Case-insensitive match
+        return whitelist.stream()
+                .anyMatch(user -> user.equalsIgnoreCase(userName));
     }
 
     /**
@@ -164,5 +192,12 @@ public class InsertInterceptor {
      */
     public static Set<String> getWhitelistDatabases() {
         return parseWhitelist(Config.insert_intercept_whitelist_dbs);
+    }
+
+    /**
+     * Get the current whitelist users (for SHOW commands, etc.)
+     */
+    public static Set<String> getWhitelistUsers() {
+        return parseWhitelist(Config.insert_intercept_whitelist_users);
     }
 }

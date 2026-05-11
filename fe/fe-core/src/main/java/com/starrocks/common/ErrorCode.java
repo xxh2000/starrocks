@@ -87,8 +87,7 @@ public enum ErrorCode {
             "Access denied; This sql is in blacklist, please contact your admin"),
 
     ERR_INSERT_INTERCEPTED(1250, new byte[] {'4', '2', '0', '0', '0'},
-            "INSERT operation is blocked for database '%s' table '%s'. " +
-                    "Use 'SET allow_insert_bypass = true' or contact admin to add database to whitelist."),
+            "INSERT operation is not allowed for database '%s' table '%s',Please write data via Flink SQL, Http StreamLoad or StarRocks Http Proxy"),
 
     ERR_NOT_SUPPORTED_AUTH_MODE(1251, new byte[] {'0', '8', '0', '0', '4'},
             "Client does not support authentication protocol requested by server; consider upgrading MySQL client"),

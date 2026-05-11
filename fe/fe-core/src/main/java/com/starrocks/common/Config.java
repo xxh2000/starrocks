@@ -1042,6 +1042,15 @@ public class Config extends ConfigBase {
     public static String insert_intercept_whitelist_dbs = "";
 
     /**
+     * Comma-separated list of user names that are allowed to execute INSERT statements
+     * when enable_insert_intercept is true.
+     * Root user is always allowed by default, no need to add to this list.
+     * Example: "admin,dba_user,etl_user"
+     */
+    @ConfField(mutable = true)
+    public static String insert_intercept_whitelist_users = "";
+
+    /**
      * If set to true, dynamic partition feature will open
      */
     @ConfField(mutable = true)
