@@ -1,0 +1,27 @@
+fe/fe-core/src/main/java/com/starrocks/common/Config.java
+  s_ae9df09a75bd96::t_e57d1da8912dd9 1045-1052
+fe/fe-core/src/main/java/com/starrocks/sql/analyzer/InsertInterceptor.java
+  s_ae9df09a75bd96::t_c5f4117fa38d74 196-202
+  s_ae9df09a75bd96::t_c9b7befe7801fd 72-74,79
+  s_ae9df09a75bd96::t_f3e60f4bae596b 85,88,90,94
+  s_ae9df09a75bd96::t_33bff3c21fe902 39-42
+  s_ae9df09a75bd96::t_063c2ffd5ba3a2 135-154
+fe/fe-core/src/main/java/com/starrocks/common/ErrorCode.java
+  ai_agent 90
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "ed2785464531ead06b2bb339d71675a092be81a3",
+  "prompts": {},
+  "sessions": {
+    "s_ae9df09a75bd96": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b75f672e-91a9-4fa2-9c6f-424bece40aa3",
+        "model": "claude-opus-4.5"
+      },
+      "human_author": "xuexinghai <xinghai.xue@ly.com>"
+    }
+  }
+}
