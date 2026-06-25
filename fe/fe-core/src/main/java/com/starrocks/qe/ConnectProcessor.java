@@ -161,6 +161,16 @@ public class ConnectProcessor {
         } else if (StringUtils.isNotEmpty(ctx.getErrorCode())) {
             // error happens in BE execution.
             errorCode = ctx.getErrorCode();
+            // Distinguish big query limit cancellations from generic CANCELLED
+            // by checking the error message from BE.
+            if (errorCode.equals("CANCELLED") && StringUtils.isNotEmpty(ctx.getState().getErrorMessage())) {
+                String errMsg = ctx.getState().getErrorMessage();
+                if (errMsg.contains("exceed big query cpu limit")) {
+                    errorCode = "big_query_cpu_limit";
+                } else if (errMsg.contains("exceed big query scan_rows limit")) {
+                    errorCode = "big_query_scan_rows_limit";
+                }
+            }
         }
 
         ctx.getAuditEventBuilder().setEventType(EventType.AFTER_QUERY)
