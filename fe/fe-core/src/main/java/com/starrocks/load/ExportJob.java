@@ -272,9 +272,7 @@ public class ExportJob implements Writable {
             fragments.add(fragment);
         } else {
             for (TScanRangeLocations tablet : tabletLocations) {
-                List<TScanRangeLocation> locations = tablet.getLocations();
-                Collections.shuffle(locations);
-                tablet.setLocations(locations.subList(0, 1));
+                tablet.setLocations(selectOneAvailableLocation(tablet));
             }
 
             long maxBytesPerBe = Config.export_max_bytes_per_be_per_task;
@@ -311,6 +309,22 @@ public class ExportJob implements Writable {
         }
 
         genCoordinators(stmt, fragments, scanNodes);
+    }
+
+    private List<TScanRangeLocation> selectOneAvailableLocation(TScanRangeLocations tablet) throws UserException {
+        List<TScanRangeLocation> availableLocations = Lists.newArrayList();
+        for (TScanRangeLocation location : tablet.getLocations()) {
+            if (GlobalStateMgr.getCurrentSystemInfo().checkBackendAvailable(location.getBackend_id())) {
+                availableLocations.add(location);
+            }
+        }
+        if (availableLocations.isEmpty()) {
+            long tabletId = tablet.getScan_range().getInternal_scan_range().getTablet_id();
+            throw new UserException("Failed to get scan range, no available backend found in tablet: " + tabletId);
+        }
+
+        Collections.shuffle(availableLocations);
+        return availableLocations.subList(0, 1);
     }
 
     private ScanNode genScanNode() throws UserException {
