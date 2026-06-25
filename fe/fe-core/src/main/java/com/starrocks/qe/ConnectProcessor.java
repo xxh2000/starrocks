@@ -161,27 +161,23 @@ public class ConnectProcessor {
         } else if (StringUtils.isNotEmpty(ctx.getErrorCode())) {
             // error happens in BE execution.
             errorCode = ctx.getErrorCode();
-            // Distinguish big query limit cancellations from generic CANCELLED
-            // by checking the error message from BE.
-            if (errorCode.equals("CANCELLED") && StringUtils.isNotEmpty(ctx.getState().getErrorMessage())) {
-                String errMsg = ctx.getState().getErrorMessage();
-                if (errMsg.contains("exceed big query cpu limit")) {
-                    errorCode = "big_query_cpu_limit";
-                } else if (errMsg.contains("exceed big query scan_rows limit")) {
-                    errorCode = "big_query_scan_rows_limit";
-                }
-            }
-            // Distinguish resource group big query mem limit vs resource group total
-            // mem limit from generic MEM_LIMIT_EXCEEDED.
-            if (errorCode.equals("MEM_LIMIT_EXCEEDED")
-                    && StringUtils.isNotEmpty(ctx.getState().getErrorMessage())) {
-                String errMsg = ctx.getState().getErrorMessage();
-                if (errMsg.contains("big_query_mem_limit")) {
-                    errorCode = "big_query_mem_limit";
-                } else if (errMsg.contains(
-                        "Mem usage has exceed the limit of the resource group")) {
-                    errorCode = "resource_group_mem_limit";
-                }
+        }
+
+        // Override with more specific error codes based on BE error message.
+        // This is needed because StmtExecutor classifies all UserExceptions
+        // (including BE-side runtime errors like big query limits) as
+        // ANALYSIS_ERR, which masks the true error cause in audit logs.
+        if (StringUtils.isNotEmpty(ctx.getState().getErrorMessage())) {
+            String errMsg = ctx.getState().getErrorMessage();
+            if (errMsg.contains("exceed big query cpu limit")) {
+                errorCode = "big_query_cpu_limit";
+            } else if (errMsg.contains("exceed big query scan_rows limit")) {
+                errorCode = "big_query_scan_rows_limit";
+            } else if (errMsg.contains("big_query_mem_limit")) {
+                errorCode = "big_query_mem_limit";
+            } else if (errMsg.contains(
+                    "Mem usage has exceed the limit of the resource group")) {
+                errorCode = "resource_group_mem_limit";
             }
         }
 
