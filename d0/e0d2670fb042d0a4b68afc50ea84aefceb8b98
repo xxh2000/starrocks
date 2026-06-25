@@ -1,0 +1,34 @@
+fe/fe-core/src/main/java/com/starrocks/load/ExportJob.java
+  s_d3c5a1a0b909ba::t_1cd7344aec86d7 275,314-327
+fe/fe-core/src/test/java/com/starrocks/sql/common/SqlDigestUtilsTest.java
+  s_eb1d7945d6749b::t_bfe22067938806 1-32
+fe/fe-core/src/test/java/com/starrocks/load/ExportJobTest.java
+  s_d3c5a1a0b909ba::t_15f76e358d74e1 1-98
+fe/fe-core/src/main/java/com/starrocks/http/rest/SqlDigestAction.java
+  s_eb1d7945d6749b::t_674e39f144bd23 8,81
+  s_eb1d7945d6749b::t_dd1a53777335cf 1-7,9-80,82-98
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.10",
+  "base_commit_sha": "d0e0d2670fb042d0a4b68afc50ea84aefceb8b98",
+  "prompts": {},
+  "sessions": {
+    "s_d3c5a1a0b909ba": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019e9133-5e66-75c2-8201-07f5d6ad8854",
+        "model": "gpt-5.5"
+      },
+      "human_author": "xuexinghai <xinghai.xue@ly.com>"
+    },
+    "s_eb1d7945d6749b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019e8c32-bd6c-7752-b6de-d3bc1f9413eb",
+        "model": "gpt-5.5"
+      },
+      "human_author": "xuexinghai <xinghai.xue@ly.com>"
+    }
+  }
+}
