@@ -171,6 +171,18 @@ public class ConnectProcessor {
                     errorCode = "big_query_scan_rows_limit";
                 }
             }
+            // Distinguish resource group big query mem limit vs resource group total
+            // mem limit from generic MEM_LIMIT_EXCEEDED.
+            if (errorCode.equals("MEM_LIMIT_EXCEEDED")
+                    && StringUtils.isNotEmpty(ctx.getState().getErrorMessage())) {
+                String errMsg = ctx.getState().getErrorMessage();
+                if (errMsg.contains("big_query_mem_limit")) {
+                    errorCode = "big_query_mem_limit";
+                } else if (errMsg.contains(
+                        "Mem usage has exceed the limit of the resource group")) {
+                    errorCode = "resource_group_mem_limit";
+                }
+            }
         }
 
         ctx.getAuditEventBuilder().setEventType(EventType.AFTER_QUERY)
