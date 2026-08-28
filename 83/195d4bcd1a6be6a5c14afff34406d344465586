@@ -1,0 +1,27 @@
+fe/fe-core/src/test/java/com/starrocks/load/ExportJobTest.java
+  s_d3c5a1a0b909ba::t_15f76e358d74e1 1-98
+fe/fe-core/src/main/java/com/starrocks/load/ExportJob.java
+  s_d3c5a1a0b909ba::t_1cd7344aec86d7 275,314-327
+  s_d3c5a1a0b909ba::t_e37b00dfd6b4ff 328-329
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "83195d4bcd1a6be6a5c14afff34406d344465586",
+  "prompts": {},
+  "humans": {
+    "h_a3cdd3fcfdc3d4": {
+      "author": "xuexinghai <xinghai.xue@ly.com>"
+    }
+  },
+  "sessions": {
+    "s_d3c5a1a0b909ba": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019e9133-5e66-75c2-8201-07f5d6ad8854",
+        "model": "gpt-5.5"
+      },
+      "human_author": "xuexinghai <xinghai.xue@ly.com>"
+    }
+  }
+}
