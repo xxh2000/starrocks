@@ -1,0 +1,19 @@
+fe/fe-core/src/test/java/com/starrocks/analysis/ResourceGroupStmtTest.java
+  s_9bfe19ad3dc4b6::t_a44fa9a6c6e8ae 385,387
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "750f6e3f67ef7f844a81280fc08f6a67825e9970",
+  "prompts": {},
+  "sessions": {
+    "s_9bfe19ad3dc4b6": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a060c0-f01e-7800-a231-086e5b40efb5",
+        "model": "gpt-5.5"
+      },
+      "human_author": "xuexinghai <xinghai.xue@ly.com>"
+    }
+  }
+}
