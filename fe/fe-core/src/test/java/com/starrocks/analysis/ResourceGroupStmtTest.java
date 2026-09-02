@@ -382,9 +382,9 @@ public class ResourceGroupStmtTest {
         starRocksAssert.executeResourceGroupDdlSql(sql);
         List<List<String>> rows = starRocksAssert.executeResourceGroupShowSql("show verbose resource group rg_digit_user");
         assertThat(rows).hasSize(1);
-        assertThat(rows.get(0).get(rows.get(0).size() - CLASSIFIER_COLUMN_IDX_REVERSE)).contains("user=123abc");
+        assertThat(rowsToString(rows)).contains("user=123abc");
 
-        dropResourceGroup("rg_digit_user");
+        starRocksAssert.executeResourceGroupDdlSql("DROP RESOURCE GROUP rg_digit_user");
     }
 
     @Test
