@@ -247,6 +247,22 @@ public class Config extends ConfigBase {
     public static int label_keep_max_second = 3 * 24 * 3600; // 3 days
 
     /**
+     * When true, keep ALL stream load tasks when loading image (both at FE startup
+     * and in the checkpoint thread), instead of discarding expired ones right away.
+     * The image checksum is computed over ALL tasks when the image is saved, so
+     * discarding tasks on load makes the recomputed checksum differ from the one
+     * stored in the image, which fails the image checksum verification and prevents
+     * FE startup / checkpoint forever once the image contains finished stream load
+     * tasks older than *label_keep_max_second*.
+     * Expired tasks are still cleaned up by the label cleaner daemon
+     * (clearExpiredJobs) and before the next checkpoint image is written.
+     * Set to false to restore the legacy behavior of discarding expired tasks
+     * on image load.
+     */
+    @ConfField(mutable = true)
+    public static boolean load_image_keep_all_stream_load_task = true;
+
+    /**
      * for load job managed by LoadManager, such as Insert, Broker load and Spark load.
      */
     @ConfField(mutable = true)

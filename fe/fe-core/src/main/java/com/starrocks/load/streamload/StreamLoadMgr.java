@@ -21,6 +21,7 @@ import com.starrocks.catalog.MaterializedView;
 import com.starrocks.catalog.OlapTable;
 import com.starrocks.catalog.Table;
 import com.starrocks.common.AnalysisException;
+import com.starrocks.common.Config;
 import com.starrocks.common.ErrorCode;
 import com.starrocks.common.ErrorReport;
 import com.starrocks.common.MetaNotFoundException;
@@ -447,30 +448,41 @@ public class StreamLoadMgr {
 
     public static StreamLoadMgr loadStreamLoadManager(DataInput in) throws IOException {
         int size = in.readInt();
+        long currentMs = System.currentTimeMillis();
         StreamLoadMgr streamLoadManager = new StreamLoadMgr();
         streamLoadManager.init();
         for (int i = 0; i < size; i++) {
             StreamLoadTask loadTask = StreamLoadTask.read(in);
             loadTask.init();
-            // NOTE: do NOT discard expired tasks here. The image checksum was computed
-            // over ALL tasks when the image was saved. Discarding expired tasks on load
-            // makes the recomputed checksum differ from the one stored in the image,
-            // which fails Preconditions.checkState(remoteChecksum == checksum) and
-            // prevents FE startup / checkpoint. Expired tasks are cleaned up later by
-            // the LoadLabelCleaner daemon (clearExpiredJobs) and before the next
-            // checkpoint image is written.
+            // The image checksum is computed over ALL tasks when the image was saved.
+            // Discarding expired tasks on load makes the recomputed checksum differ
+            // from the stored one, which fails
+            // Preconditions.checkState(remoteChecksum == checksum) and prevents FE
+            // startup / checkpoint. Guarded by Config.load_image_keep_all_stream_load_task
+            // (default true). Expired tasks are cleaned up later by the LoadLabelCleaner
+            // daemon (clearExpiredJobs) and before the next checkpoint image is written.
+            if (!Config.load_image_keep_all_stream_load_task && loadTask.checkNeedRemove(currentMs)) {
+                LOG.info("discard expired task: {}", loadTask.getLabel());
+                continue;
+            }
+
             streamLoadManager.addLoadTask(loadTask);
         }
         return streamLoadManager;
     }
 
     public void load(SRMetaBlockReader reader) throws IOException, SRMetaBlockException, SRMetaBlockEOFException {
+        long currentMs = System.currentTimeMillis();
         int numJson = reader.readInt();
         for (int i = 0; i < numJson; ++i) {
             StreamLoadTask loadTask = reader.readJson(StreamLoadTask.class);
             loadTask.init();
-            // NOTE: keep consistent with loadStreamLoadManager(): do not discard
-            // expired tasks on load. They are cleaned by LoadLabelCleaner later.
+            // Keep consistent with loadStreamLoadManager(): see the comment there.
+            if (!Config.load_image_keep_all_stream_load_task && loadTask.checkNeedRemove(currentMs)) {
+                LOG.info("discard expired task: {}", loadTask.getLabel());
+                continue;
+            }
+
             addLoadTask(loadTask);
         }
     }
