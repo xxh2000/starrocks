@@ -449,8 +449,13 @@ public class StreamLoadMgr {
     public static StreamLoadMgr loadStreamLoadManager(DataInput in) throws IOException {
         int size = in.readInt();
         long currentMs = System.currentTimeMillis();
+        boolean keepAll = Config.load_image_keep_all_stream_load_task;
+        LOG.info("begin to load {} stream load tasks from image, " +
+                "load_image_keep_all_stream_load_task: {}", size, keepAll);
         StreamLoadMgr streamLoadManager = new StreamLoadMgr();
         streamLoadManager.init();
+        int numDiscarded = 0;
+        int numExpiredKept = 0;
         for (int i = 0; i < size; i++) {
             StreamLoadTask loadTask = StreamLoadTask.read(in);
             loadTask.init();
@@ -461,29 +466,50 @@ public class StreamLoadMgr {
             // startup / checkpoint. Guarded by Config.load_image_keep_all_stream_load_task
             // (default true). Expired tasks are cleaned up later by the LoadLabelCleaner
             // daemon (clearExpiredJobs) and before the next checkpoint image is written.
-            if (!Config.load_image_keep_all_stream_load_task && loadTask.checkNeedRemove(currentMs)) {
-                LOG.info("discard expired task: {}", loadTask.getLabel());
-                continue;
+            if (loadTask.checkNeedRemove(currentMs)) {
+                if (keepAll) {
+                    numExpiredKept++;
+                } else {
+                    LOG.info("discard expired task: {}", loadTask.getLabel());
+                    numDiscarded++;
+                    continue;
+                }
             }
 
             streamLoadManager.addLoadTask(loadTask);
         }
+        LOG.info("finished to load stream load tasks from image. total: {}, loaded: {}, discarded: {}, " +
+                        "expired kept for checksum consistency: {}", size, size - numDiscarded, numDiscarded,
+                numExpiredKept);
         return streamLoadManager;
     }
 
     public void load(SRMetaBlockReader reader) throws IOException, SRMetaBlockException, SRMetaBlockEOFException {
         long currentMs = System.currentTimeMillis();
         int numJson = reader.readInt();
+        boolean keepAll = Config.load_image_keep_all_stream_load_task;
+        LOG.info("begin to load {} stream load tasks from image, " +
+                "load_image_keep_all_stream_load_task: {}", numJson, keepAll);
+        int numDiscarded = 0;
+        int numExpiredKept = 0;
         for (int i = 0; i < numJson; ++i) {
             StreamLoadTask loadTask = reader.readJson(StreamLoadTask.class);
             loadTask.init();
             // Keep consistent with loadStreamLoadManager(): see the comment there.
-            if (!Config.load_image_keep_all_stream_load_task && loadTask.checkNeedRemove(currentMs)) {
-                LOG.info("discard expired task: {}", loadTask.getLabel());
-                continue;
+            if (loadTask.checkNeedRemove(currentMs)) {
+                if (keepAll) {
+                    numExpiredKept++;
+                } else {
+                    LOG.info("discard expired task: {}", loadTask.getLabel());
+                    numDiscarded++;
+                    continue;
+                }
             }
 
             addLoadTask(loadTask);
         }
+        LOG.info("finished to load stream load tasks from image. total: {}, loaded: {}, discarded: {}, " +
+                        "expired kept for checksum consistency: {}", numJson, numJson - numDiscarded, numDiscarded,
+                numExpiredKept);
     }
 }
