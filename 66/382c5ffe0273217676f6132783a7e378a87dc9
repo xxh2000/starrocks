@@ -1,0 +1,16 @@
+fe/fe-core/src/main/java/com/starrocks/load/streamload/StreamLoadMgr.java
+  h_a3cdd3fcfdc3d4 455-461,472-473
+fe/fe-core/src/main/java/com/starrocks/load/streamload/StreamLoadTask.java
+  h_a3cdd3fcfdc3d4 879-882
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "66382c5ffe0273217676f6132783a7e378a87dc9",
+  "prompts": {},
+  "humans": {
+    "h_a3cdd3fcfdc3d4": {
+      "author": "xuexinghai <xinghai.xue@ly.com>"
+    }
+  }
+}
