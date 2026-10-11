@@ -1,0 +1,16 @@
+fe/fe-core/src/main/java/com/starrocks/common/Config.java
+  h_a3cdd3fcfdc3d4 249-264
+fe/fe-core/src/main/java/com/starrocks/load/streamload/StreamLoadMgr.java
+  h_a3cdd3fcfdc3d4 24,451,457-468,475,480-485
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "cb9dff75bbc08bf75d864810c346f49e9ad1622e",
+  "prompts": {},
+  "humans": {
+    "h_a3cdd3fcfdc3d4": {
+      "author": "xuexinghai <xinghai.xue@ly.com>"
+    }
+  }
+}
