@@ -876,7 +876,10 @@ public class StreamLoadTask extends AbstractTxnStateChangeCallback
             readUnlock();
         }
         Preconditions.checkState(endTimeMs != -1, endTimeMs);
-        if ((currentMs - endTimeMs) > Config.label_keep_max_second * 1000) {
+        // NOTE: cast to long before multiplication. label_keep_max_second is int and
+        // values larger than 2147483 (about 24.8 days) overflow int arithmetic,
+        // silently wrapping to a wrong (possibly small positive) keep time.
+        if ((currentMs - endTimeMs) > Config.label_keep_max_second * 1000L) {
             return true;
         }
         return false;

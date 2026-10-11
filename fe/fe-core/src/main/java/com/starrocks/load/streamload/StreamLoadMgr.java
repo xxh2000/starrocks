@@ -447,35 +447,30 @@ public class StreamLoadMgr {
 
     public static StreamLoadMgr loadStreamLoadManager(DataInput in) throws IOException {
         int size = in.readInt();
-        long currentMs = System.currentTimeMillis();
         StreamLoadMgr streamLoadManager = new StreamLoadMgr();
         streamLoadManager.init();
         for (int i = 0; i < size; i++) {
             StreamLoadTask loadTask = StreamLoadTask.read(in);
             loadTask.init();
-            // discard expired task right away
-            if (loadTask.checkNeedRemove(currentMs)) {
-                LOG.info("discard expired task: {}", loadTask.getLabel());
-                continue;
-            }
-
+            // NOTE: do NOT discard expired tasks here. The image checksum was computed
+            // over ALL tasks when the image was saved. Discarding expired tasks on load
+            // makes the recomputed checksum differ from the one stored in the image,
+            // which fails Preconditions.checkState(remoteChecksum == checksum) and
+            // prevents FE startup / checkpoint. Expired tasks are cleaned up later by
+            // the LoadLabelCleaner daemon (clearExpiredJobs) and before the next
+            // checkpoint image is written.
             streamLoadManager.addLoadTask(loadTask);
         }
         return streamLoadManager;
     }
 
     public void load(SRMetaBlockReader reader) throws IOException, SRMetaBlockException, SRMetaBlockEOFException {
-        long currentMs = System.currentTimeMillis();
         int numJson = reader.readInt();
         for (int i = 0; i < numJson; ++i) {
             StreamLoadTask loadTask = reader.readJson(StreamLoadTask.class);
             loadTask.init();
-            // discard expired task right away
-            if (loadTask.checkNeedRemove(currentMs)) {
-                LOG.info("discard expired task: {}", loadTask.getLabel());
-                continue;
-            }
-
+            // NOTE: keep consistent with loadStreamLoadManager(): do not discard
+            // expired tasks on load. They are cleaned by LoadLabelCleaner later.
             addLoadTask(loadTask);
         }
     }
