@@ -1,0 +1,28 @@
+be/src/storage/segment_replicate_executor.h
+  s_b11f3c24704307::t_13173cd81d19ee 73
+be/src/storage/segment_replicate_executor.cpp
+  s_b11f3c24704307::t_13173cd81d19ee 81-82,87,131,161,174
+be/test/CMakeLists.txt
+  s_b11f3c24704307::t_206813892e6d17 285
+be/test/runtime/mem_tracker_test.cpp
+  s_b11f3c24704307::t_206813892e6d17 1-43
+  s_b11f3c24704307::t_c7c782dc1701b4 44
+be/src/runtime/mem_tracker.h
+  s_b11f3c24704307::t_13173cd81d19ee 161-167,170-176
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "78c2a3156af8f4a4fc884981ebea90762a8ac01c",
+  "prompts": {},
+  "sessions": {
+    "s_b11f3c24704307": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a17c26-c643-78e0-9b1a-7656237ea2b9",
+        "model": "gpt-6-sol"
+      },
+      "human_author": "xuexinghai <xinghai.xue@ly.com>"
+    }
+  }
+}
