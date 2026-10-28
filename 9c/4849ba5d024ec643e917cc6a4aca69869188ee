@@ -1,0 +1,19 @@
+fe/fe-core/src/test/java/com/starrocks/scheduler/PartitionBasedMvRefreshProcessorTest.java
+  s_c092d59239696f::t_bc3c3390c80019 44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9c4849ba5d024ec643e917cc6a4aca69869188ee",
+  "prompts": {},
+  "sessions": {
+    "s_c092d59239696f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18066-1559-7eb3-9070-be210bab92b3",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "xuexinghai <xinghai.xue@ly.com>"
+    }
+  }
+}
