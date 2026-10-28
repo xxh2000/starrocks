@@ -1,0 +1,36 @@
+fe/fe-core/src/test/java/com/starrocks/qe/VariableMgrTest.java
+  s_c092d59239696f::t_8ee19917141dab 103-130
+  s_c092d59239696f::t_b03bf5456859f2 102
+fe/fe-core/src/test/java/com/starrocks/scheduler/PartitionBasedMvRefreshProcessorTest.java
+  s_c092d59239696f::t_8ee19917141dab 21,44-45,51-52,280-316
+  s_c092d59239696f::t_611cd34feba97b 317-319
+fe/fe-core/src/test/java/com/starrocks/sql/analyzer/AnalyzeSetVariableTest.java
+  s_c092d59239696f::t_8ee19917141dab 41-50
+  s_c092d59239696f::t_31941f68fe1101 40
+docs/en/reference/System_variable.md
+  s_c092d59239696f::t_748834e3cba960 487-501
+docs/zh/reference/System_variable.md
+  s_c092d59239696f::t_1c6fcd08543d85 475-490
+fe/fe-core/src/main/java/com/starrocks/qe/SessionVariable.java
+  s_c092d59239696f::t_3027fbacc02247 99,606-609,1426-1433
+fe/fe-core/src/main/java/com/starrocks/scheduler/PartitionBasedMvRefreshProcessor.java
+  s_c092d59239696f::t_efdeaa040eccea 512-515
+fe/fe-core/src/main/java/com/starrocks/sql/analyzer/SetStmtAnalyzer.java
+  s_c092d59239696f::t_17ecfcd8b57a89 152-156
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "96e3861e89c133562a4cc22b23308ae3041951a8",
+  "prompts": {},
+  "sessions": {
+    "s_c092d59239696f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18066-1559-7eb3-9070-be210bab92b3",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "xuexinghai <xinghai.xue@ly.com>"
+    }
+  }
+}
